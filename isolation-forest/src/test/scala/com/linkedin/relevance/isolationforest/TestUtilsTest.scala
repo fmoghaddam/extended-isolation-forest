@@ -4,7 +4,6 @@ import TestUtils._
 import org.testng.Assert
 import org.testng.annotations.Test
 
-
 class TestUtilsTest {
 
   @Test(description = "loadMammographyDataTest")

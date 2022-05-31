@@ -1,8 +1,6 @@
 package com.linkedin.relevance.isolationforest
 
-
-/**
-  * Useful utilities.
+/** Useful utilities.
   */
 private[isolationforest] object Utils extends Serializable {
 
@@ -11,8 +9,7 @@ private[isolationforest] object Utils extends Serializable {
 
   val EulerConstant = 0.5772156649f
 
-  /**
-    * Returns the average path length for an unsuccessful BST search. It is Equation 1 in the 2008
+  /** Returns the average path length for an unsuccessful BST search. It is Equation 1 in the 2008
     * "Isolation Forest" paper by F. T. Liu, et al.
     *
     * @param numInstances The number of data points in the root node of the BST.

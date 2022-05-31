@@ -6,7 +6,6 @@ import com.linkedin.relevance.isolationforest.Utils.DataPoint
 import org.testng.Assert
 import org.testng.annotations.Test
 
-
 class IsolationTreeTest {
 
   @Test(description = "generateIsolationTreeTest")
@@ -14,13 +13,20 @@ class IsolationTreeTest {
 
     val data = readCsv("src/test/resources/shuttle.csv")
 
-    val dataArray = data.map(x => DataPoint(x.slice(0, data.head.length - 1)))  // Drop labels column
+    val dataArray = data.map(x =>
+      DataPoint(x.slice(0, data.head.length - 1))
+    ) // Drop labels column
 
     val heightLimit = 15
     val randomState = new scala.util.Random(1)
     val featureIndicies = dataArray.head.features.indices.toArray
     val root = IsolationTree
-      .generateIsolationTree(dataArray, heightLimit, randomState, featureIndicies)
+      .generateIsolationTree(
+        dataArray,
+        heightLimit,
+        randomState,
+        featureIndicies
+      )
 
     Assert.assertEquals(root.subtreeDepth, heightLimit)
   }
@@ -30,7 +36,7 @@ class IsolationTreeTest {
 
     val leftChild = ExternalNode(10)
     val rightChild = ExternalNode(20)
-    val root = InternalNode(leftChild, rightChild, 0, 1.5)
+    val root = InternalNode(leftChild, rightChild, Array(), Array())
 
     val data1 = DataPoint(Array(1.0f))
     val data2 = DataPoint(Array(2.0f))

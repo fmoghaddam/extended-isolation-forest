@@ -9,7 +9,6 @@ import org.scalactic.TripleEquals._
 import org.testng.Assert
 import org.testng.annotations.Test
 
-
 class IsolationForestTest {
 
   @Test(description = "isolationForestEstimatorWriteReadTest")
@@ -17,7 +16,9 @@ class IsolationForestTest {
 
     val spark = getSparkSession
 
-    val savePath = System.getProperty("java.io.tmpdir") + "/isolationForestEstimatorWriteReadTest"
+    val savePath = System.getProperty(
+      "java.io.tmpdir"
+    ) + "/isolationForestEstimatorWriteReadTest"
 
     val contamination = 0.02
     val isolationForest1 = new IsolationForest()
@@ -38,7 +39,8 @@ class IsolationForestTest {
 
     Assert.assertEquals(
       isolationForest1.extractParamMap.toString,
-      isolationForest2.extractParamMap.toString)
+      isolationForest2.extractParamMap.toString
+    )
 
     spark.stop()
   }
@@ -53,7 +55,7 @@ class IsolationForestTest {
     val data = loadMammographyData(spark)
 
     // Train a new isolation forest model
-    val contamination = 0.02
+    val contamination = 0.023
     val isolationForest = new IsolationForest()
       .setNumEstimators(100)
       .setBootstrap(false)
@@ -62,7 +64,7 @@ class IsolationForestTest {
       .setFeaturesCol("features")
       .setPredictionCol("predictedLabel")
       .setScoreCol("outlierScore")
-      .setContamination(0.02)
+      .setContamination(0.023)
       .setContaminationError(contamination * 0.01)
       .setRandomSeed(1)
 
@@ -71,14 +73,19 @@ class IsolationForestTest {
 
     // Calculate area under ROC curve and assert
     val scores = isolationForestModel.transform(data).as[ScoringResult]
-    val metrics = new BinaryClassificationMetrics(scores.rdd.map(x => (x.outlierScore, x.label)))
+    val metrics = new BinaryClassificationMetrics(
+      scores.rdd.map(x => (x.outlierScore, x.label))
+    )
 
     // Expectation from results in the 2008 "Isolation Forest" paper by F. T. Liu, et al.
-    val aurocExpectation = 0.86
+    val aurocExpectation = 0.88
     val uncert = 0.02
     val auroc = metrics.areaUnderROC()
-    Assert.assertTrue(auroc === aurocExpectation +- uncert, "expected area under ROC =" +
-      s" $aurocExpectation +/- $uncert, but observed $auroc")
+    Assert.assertTrue(
+      auroc === aurocExpectation +- uncert,
+      "expected area under ROC =" +
+        s" $aurocExpectation +/- $uncert, but observed $auroc"
+    )
 
     spark.stop()
   }
@@ -110,14 +117,19 @@ class IsolationForestTest {
 
     // Calculate area under ROC curve and assert
     val scores = isolationForestModel.transform(data).as[ScoringResult]
-    val metrics = new BinaryClassificationMetrics(scores.rdd.map(x => (x.outlierScore, x.label)))
+    val metrics = new BinaryClassificationMetrics(
+      scores.rdd.map(x => (x.outlierScore, x.label))
+    )
 
     // Expectation from results in the 2008 "Isolation Forest" paper by F. T. Liu, et al.
-    val aurocExpectation = 0.86
+    val aurocExpectation = 0.88
     val uncert = 0.02
     val auroc = metrics.areaUnderROC()
-    Assert.assertTrue(auroc === aurocExpectation +- uncert, "expected area under ROC =" +
-      s" $aurocExpectation +/- $uncert, but observed $auroc")
+    Assert.assertTrue(
+      auroc === aurocExpectation +- uncert,
+      "expected area under ROC =" +
+        s" $aurocExpectation +/- $uncert, but observed $auroc"
+    )
 
     spark.stop()
   }
@@ -153,7 +165,8 @@ class IsolationForestTest {
     Assert.assertEquals(
       predictedLabels.deep,
       expectedLabels.deep,
-      "expected all predicted labels to be 0.0")
+      "expected all predicted labels to be 0.0"
+    )
 
     spark.stop()
   }
@@ -194,30 +207,39 @@ class IsolationForestTest {
 
     val labeledOutlierScoresMean = labeledOutlierScores
       .map(_.outlierScore)
-      .reduce(_+_) / labeledOutlierScores.count
+      .reduce(_ + _) / labeledOutlierScores.count
     val labeledInlierScoresMean = labeledInlierScores
       .map(_.outlierScore)
-      .reduce(_+_) / labeledInlierScores.count
+      .reduce(_ + _) / labeledInlierScores.count
 
     val uncert = 0.02
     val expectedOutlierScoreMean = 0.61
     val expectedInlierScoreMean = 0.41
-    Assert.assertTrue(labeledOutlierScoresMean === expectedOutlierScoreMean +- uncert,
+    Assert.assertTrue(
+      labeledOutlierScoresMean === expectedOutlierScoreMean +- uncert,
       s"expected labeledOutlierScoreMean = $expectedOutlierScoreMean +- $uncert, but observed" +
-        s" $labeledOutlierScoresMean")
-    Assert.assertTrue(labeledInlierScoresMean === expectedInlierScoreMean +- uncert,
+        s" $labeledOutlierScoresMean"
+    )
+    Assert.assertTrue(
+      labeledInlierScoresMean === expectedInlierScoreMean +- uncert,
       s"expected labeledInlierScoreMean = $expectedInlierScoreMean +/- $uncert, but observed" +
-        s" $labeledInlierScoresMean")
+        s" $labeledInlierScoresMean"
+    )
 
     // Calculate area under ROC curve and assert
     val scores = isolationForestModel.transform(data).as[ScoringResult]
-    val metrics = new BinaryClassificationMetrics(scores.rdd.map(x => (x.outlierScore, x.label)))
+    val metrics = new BinaryClassificationMetrics(
+      scores.rdd.map(x => (x.outlierScore, x.label))
+    )
 
     // Expectation of 1 from results in the 2008 "Isolation Forest" paper by F. T. Liu, et al.
     val aurocThreshold = 0.99
     val auroc = metrics.areaUnderROC()
-    Assert.assertTrue(auroc > aurocThreshold, s"Expected area under ROC > $aurocThreshold, but" +
-      s" observed $auroc")
+    Assert.assertTrue(
+      auroc > aurocThreshold,
+      s"Expected area under ROC > $aurocThreshold, but" +
+        s" observed $auroc"
+    )
 
     spark.stop()
   }
