@@ -6,7 +6,7 @@
  *
  */
 
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
 import org.apache.commons.math3.distribution.{
   AbstractIntegerDistribution,
@@ -28,7 +28,7 @@ import scala.util.Random
   * @param datum Data instance.
   * @param subsampleWeights Weight of this instance in each subsampled dataset.
   */
-private[isolationforest] case class BaggedPoint[Datum](
+private[extendedisolationforest] case class BaggedPoint[Datum](
     datum: Datum,
     subsampleWeights: Array[Double]
 ) extends Serializable {
@@ -62,7 +62,7 @@ private[isolationforest] case class BaggedPoint[Datum](
 
 /** Companion object for BaggedPoint for defining constructors that create the subsampleWeights.
   */
-private[isolationforest] case object BaggedPoint {
+private[extendedisolationforest] case object BaggedPoint {
 
   /** Enforces the parameter constraints for BaggedPoint constructors.
     *

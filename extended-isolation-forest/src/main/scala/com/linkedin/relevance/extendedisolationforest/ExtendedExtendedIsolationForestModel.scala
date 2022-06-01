@@ -1,6 +1,9 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
-import com.linkedin.relevance.isolationforest.Utils.{avgPathLength, DataPoint}
+import com.linkedin.relevance.extendedisolationforest.Utils.{
+  avgPathLength,
+  DataPoint
+}
 import org.apache.spark.ml.Model
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 import org.apache.spark.ml.linalg.Vector
@@ -15,12 +18,12 @@ import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
   * @param uid The immutable unique ID for the model.
   * @param isolationTrees The array of isolation tree models that compose the isolation forest.
   */
-class IsolationForestModel(
+class ExtendedExtendedIsolationForestModel(
     override val uid: String,
-    val isolationTrees: Array[IsolationTree],
+    val isolationTrees: Array[ExtendedIsolationTree],
     private val numSamples: Int
-) extends Model[IsolationForestModel]
-    with IsolationForestParams
+) extends Model[ExtendedExtendedIsolationForestModel]
+    with ExtendedIsolationForestParams
     with MLWritable {
 
   require(
@@ -32,7 +35,9 @@ class IsolationForestModel(
   // The outlierScoreThreshold needs to be a mutable variable because it is not known when an
   // IsolationForestModel instance is created.
   private var outlierScoreThreshold: Double = -1
-  private[isolationforest] def setOutlierScoreThreshold(value: Double): Unit = {
+  private[extendedisolationforest] def setOutlierScoreThreshold(
+      value: Double
+  ): Unit = {
 
     require(
       value == -1 || (value >= 0 && value <= 1),
@@ -44,10 +49,10 @@ class IsolationForestModel(
   }
   final def getOutlierScoreThreshold: Double = outlierScoreThreshold
 
-  override def copy(extra: ParamMap): IsolationForestModel = {
+  override def copy(extra: ParamMap): ExtendedExtendedIsolationForestModel = {
 
     val isolationForestCopy =
-      new IsolationForestModel(uid, isolationTrees, numSamples)
+      new ExtendedExtendedIsolationForestModel(uid, isolationTrees, numSamples)
         .setParent(this.parent)
     isolationForestCopy.setOutlierScoreThreshold(outlierScoreThreshold)
     copyValues(isolationForestCopy, extra)
@@ -134,25 +139,27 @@ class IsolationForestModel(
     * @return An IsolationForestModelWriter instance.
     */
   override def write: MLWriter =
-    new IsolationForestModelReadWrite.IsolationForestModelWriter(this)
+    new ExtendedIsolationForestModelReadWrite.IsolationForestModelWriter(this)
 }
 
 /** Companion object to the IsolationForestModel class.
   */
-case object IsolationForestModel extends MLReadable[IsolationForestModel] {
+case object ExtendedExtendedIsolationForestModel
+    extends MLReadable[ExtendedExtendedIsolationForestModel] {
 
   /** Returns an IsolationForestModelReader instance that can be used to read a saved isolation
     * forest from disk.
     *
     * @return An IsolationForestModelReader instance.
     */
-  override def read: MLReader[IsolationForestModel] =
-    new IsolationForestModelReadWrite.IsolationForestModelReader
+  override def read: MLReader[ExtendedExtendedIsolationForestModel] =
+    new ExtendedIsolationForestModelReadWrite.IsolationForestModelReader
 
   /** Loads a saved isolation forest model from disk. A shortcut of `read.load(path)`.
     *
     * @param path The path to the saved isolation forest model.
     * @return The loaded IsolationForestModel instance.
     */
-  override def load(path: String): IsolationForestModel = super.load(path)
+  override def load(path: String): ExtendedExtendedIsolationForestModel =
+    super.load(path)
 }

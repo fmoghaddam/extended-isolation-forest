@@ -1,4 +1,4 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.feature.VectorAssembler

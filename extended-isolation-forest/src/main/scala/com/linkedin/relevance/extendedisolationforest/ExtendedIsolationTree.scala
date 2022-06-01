@@ -1,11 +1,11 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
-import com.linkedin.relevance.isolationforest.Nodes.{
+import com.linkedin.relevance.extendedisolationforest.Nodes.{
   ExternalNode,
   InternalNode,
   Node
 }
-import com.linkedin.relevance.isolationforest.Utils.DataPoint
+import com.linkedin.relevance.extendedisolationforest.Utils.DataPoint
 import org.apache.spark.internal.Logging
 
 import scala.annotation.tailrec
@@ -16,10 +16,10 @@ import scala.util.Random
   *
   * @param node The root node of the isolation tree model.
   */
-private[isolationforest] class IsolationTree(val node: Node)
+private[extendedisolationforest] class ExtendedIsolationTree(val node: Node)
     extends Serializable {
 
-  import IsolationTree._
+  import ExtendedIsolationTree._
 
   /** Returns the path length from the root node of this isolation tree to the node in the tree that
     * contains a particular data point.
@@ -27,7 +27,7 @@ private[isolationforest] class IsolationTree(val node: Node)
     * @param dataInstance The feature array for a single data instance.
     * @return The path length to the instance.
     */
-  private[isolationforest] def calculatePathLength(
+  private[extendedisolationforest] def calculatePathLength(
       dataInstance: DataPoint
   ): Float =
     pathLength(dataInstance, node)
@@ -35,7 +35,8 @@ private[isolationforest] class IsolationTree(val node: Node)
 
 /** Companion object used to train the IsolationTree class.
   */
-private[isolationforest] case object IsolationTree extends Logging {
+private[extendedisolationforest] case object ExtendedIsolationTree
+    extends Logging {
 
   /** Fits a single isolation tree to the input data.
     *
@@ -50,7 +51,7 @@ private[isolationforest] case object IsolationTree extends Logging {
       data: Array[DataPoint],
       randomSeed: Long,
       featureIndices: Array[Int]
-  ): IsolationTree = {
+  ): ExtendedIsolationTree = {
 
     logInfo(
       s"Fitting isolation tree with random seed ${randomSeed} on" +
@@ -60,7 +61,7 @@ private[isolationforest] case object IsolationTree extends Logging {
     def log2(x: Double): Double = math.log10(x) / math.log10(2.0)
     val heightLimit = math.ceil(log2(data.length.toDouble)).toInt
 
-    new IsolationTree(
+    new ExtendedIsolationTree(
       generateIsolationTree(
         data,
         heightLimit,
@@ -171,13 +172,12 @@ private[isolationforest] case object IsolationTree extends Logging {
           getIntercepts(data, availableFeatures.length, randomState)
         (slopes, intercepts)
       }
-
-      val (slopes, intercepts) = getFeatureToSplit(data)
       val numInstances = data.length
+      val (slopes, intercepts) = getFeatureToSplit(data)
 
-      if (currentTreeHeight >= heightLimit || numInstances <= 1)
+      if (currentTreeHeight >= heightLimit || numInstances <= 1) {
         ExternalNode(numInstances)
-      else {
+      } else {
         val dataLeft = data.filter(x => check(x, slopes, intercepts) < 0)
         val dataRight = data.filter(x => check(x, slopes, intercepts) >= 0)
 

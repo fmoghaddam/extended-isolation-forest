@@ -21,7 +21,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    group = "com.linkedin.isolation-forest"
+    group = "com.linkedin.extended-isolation-forest"
 
     repositories {
         jcenter()

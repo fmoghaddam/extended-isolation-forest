@@ -1,12 +1,15 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
-import com.linkedin.relevance.isolationforest.Nodes.{ExternalNode, InternalNode}
-import com.linkedin.relevance.isolationforest.TestUtils._
-import com.linkedin.relevance.isolationforest.Utils.DataPoint
+import com.linkedin.relevance.extendedisolationforest.Nodes.{
+  ExternalNode,
+  InternalNode
+}
+import com.linkedin.relevance.extendedisolationforest.TestUtils._
+import com.linkedin.relevance.extendedisolationforest.Utils.DataPoint
 import org.testng.Assert
 import org.testng.annotations.Test
 
-class IsolationTreeTest {
+class ExtendedIsolationTreeTest {
 
   @Test(description = "generateIsolationTreeTest")
   def generateIsolationTreeTest(): Unit = {
@@ -20,7 +23,7 @@ class IsolationTreeTest {
     val heightLimit = 15
     val randomState = new scala.util.Random(1)
     val featureIndicies = dataArray.head.features.indices.toArray
-    val root = IsolationTree
+    val root = ExtendedIsolationTree
       .generateIsolationTree(
         dataArray,
         heightLimit,
@@ -41,8 +44,8 @@ class IsolationTreeTest {
     val data1 = DataPoint(Array(1.0f))
     val data2 = DataPoint(Array(2.0f))
 
-    val pathLength1 = IsolationTree.pathLength(data1, root)
-    val pathLength2 = IsolationTree.pathLength(data2, root)
+    val pathLength1 = ExtendedIsolationTree.pathLength(data1, root)
+    val pathLength2 = ExtendedIsolationTree.pathLength(data2, root)
 
     Assert.assertEquals(pathLength1, 4.7488804f)
     Assert.assertEquals(pathLength2, 6.143309f)

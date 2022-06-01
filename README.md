@@ -1,5 +1,5 @@
-# isolation-forest
-[![Build Status](https://github.com/linkedin/isolation-forest/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/linkedin/isolation-forest/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
+# Extended Isolation Forest
+<!-- [![Build Status](https://github.com/linkedin/isolation-forest/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/linkedin/isolation-forest/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![Release](https://img.shields.io/github/v/release/linkedin/isolation-forest)](https://github.com/linkedin/isolation-forest/releases/)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](LICENSE)
 
@@ -7,12 +7,12 @@ We have moved from Bintray to [Maven Central](https://repo.maven.apache.org/mave
 
 As of version [2.0.0](https://github.com/linkedin/isolation-forest/releases/tag/v2.0.0), we are only publishing
 artifacts to Maven Central instead than Bintray. Bintray is
-[approaching its end of life](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/).
+[approaching its end of life](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/). -->
 
 ## Introduction
 
-This is a Scala/Spark implementation of the Isolation Forest unsupervised outlier detection
-algorithm. This library was created by [James Verbus](https://www.linkedin.com/in/jamesverbus/) from
+This is a Scala/Spark implementation of the Extended Isolation Forest unsupervised outlier detection
+algorithm. This is based on Isolation Forest library which was created by [James Verbus](https://www.linkedin.com/in/jamesverbus/) from
 the LinkedIn Anti-Abuse AI team.
 
 This library supports distributed training and scoring using Spark data structures. It inherits from
@@ -32,12 +32,12 @@ See [License](LICENSE) in the project root for license information.
 
 ### Building the library
 
-It is recommended to use Scala 2.11.8 and Spark 2.3.0. To build, run the following:
+It is recommended to use Scala 2.12.11 and Spark 3.0.0. To build, run the following:
 
 ```bash
 ./gradlew build
 ```
-This will produce a jar file in the `./isolation-forest/build/libs/` directory.
+This will produce a jar file in the `./extended-isolation-forest/build/libs/` directory.
 
 If you want to use the library with Spark 2.4 (and the Scala 2.11.8 default), you can specify this when running the
 build command.

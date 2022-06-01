@@ -15,10 +15,10 @@
  *
  */
 
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
-import com.linkedin.relevance.isolationforest.TestUtils._
-import com.linkedin.relevance.isolationforest.Utils.DataPoint
+import com.linkedin.relevance.extendedisolationforest.TestUtils._
+import com.linkedin.relevance.extendedisolationforest.Utils.DataPoint
 import org.apache.spark.util.StatCounter
 import org.scalactic.Tolerance._
 import org.scalactic.TripleEquals._

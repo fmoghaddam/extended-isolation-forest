@@ -1,4 +1,4 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
 import org.apache.spark.ml.param.{
   BooleanParam,
@@ -12,7 +12,7 @@ import org.apache.spark.ml.param.{
 
 /** Params for the isolation forest model.
   */
-trait IsolationForestParams extends Params {
+trait ExtendedIsolationForestParams extends Params {
 
   final val numEstimators = new IntParam(
     this,

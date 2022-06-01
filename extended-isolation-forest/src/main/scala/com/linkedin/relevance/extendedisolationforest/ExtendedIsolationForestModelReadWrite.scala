@@ -7,9 +7,9 @@
  *
  */
 
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
-import com.linkedin.relevance.isolationforest.Nodes.{
+import com.linkedin.relevance.extendedisolationforest.Nodes.{
   ExternalNode,
   InternalNode,
   Node
@@ -27,7 +27,7 @@ import org.json4s.jackson.JsonMethods.{compact, parse, render}
   * case classes. A trained IsolationForestModel can be written (read) to (from) HDFS using these
   * classes.
   */
-private[isolationforest] case object IsolationForestModelReadWrite
+private[extendedisolationforest] case object ExtendedIsolationForestModelReadWrite
     extends Logging {
 
   val NullNodeId: Int = -1
@@ -38,16 +38,16 @@ private[isolationforest] case object IsolationForestModelReadWrite
   /** Reads a saved isolation forest model from disk.
     */
   class IsolationForestModelReader
-      extends MLReader[IsolationForestModel]
+      extends MLReader[ExtendedExtendedIsolationForestModel]
       with Serializable {
 
     /** Overrides [[org.apache.spark.ml.util.MLReader.load]] in order to load an
-      * [[IsolationForestModel]] instance.
+      * [[ExtendedExtendedIsolationForestModel]] instance.
       *
       * @param path The path to the saved isolation forest model.
       * @return The loaded IsolationForestModel instance.
       */
-    override def load(path: String): IsolationForestModel = {
+    override def load(path: String): ExtendedExtendedIsolationForestModel = {
 
       implicit val format = DefaultFormats
       val (metadata, treesData) = loadImpl(path, sparkSession)
@@ -57,12 +57,16 @@ private[isolationforest] case object IsolationForestModelReadWrite
 
       val trees = treesData.map {
         case internalNode: InternalNode =>
-          new IsolationTree(internalNode.asInstanceOf[InternalNode])
+          new ExtendedIsolationTree(internalNode.asInstanceOf[InternalNode])
         case externalNode: ExternalNode =>
-          new IsolationTree(externalNode.asInstanceOf[ExternalNode])
+          new ExtendedIsolationTree(externalNode.asInstanceOf[ExternalNode])
       }
 
-      val model = new IsolationForestModel(metadata.uid, trees, numSamples)
+      val model = new ExtendedExtendedIsolationForestModel(
+        metadata.uid,
+        trees,
+        numSamples
+      )
       metadata.setParams(model)
       model.setOutlierScoreThreshold(outlierScoreThreshold)
 
@@ -257,8 +261,9 @@ private[isolationforest] case object IsolationForestModelReadWrite
     *
     * @param instance The IsolationForestModel instance to write to disk.
     */
-  class IsolationForestModelWriter(instance: IsolationForestModel)
-      extends MLWriter {
+  class IsolationForestModelWriter(
+      instance: ExtendedExtendedIsolationForestModel
+  ) extends MLWriter {
 
     /** Overrides [[org.apache.spark.ml.util.MLWriter.saveImpl]].
       *
@@ -450,13 +455,16 @@ private[isolationforest] case object IsolationForestModelReadWrite
     */
   case object EnsembleNodeData {
 
-    /** Serializes an [[IsolationTree]] instance.
+    /** Serializes an [[ExtendedIsolationTree]] instance.
       *
       * @param tree The IsolationTree instance to serialize.
       * @param treeID The ID specifying the index of this isolation tree in the ensemble.
       * @return A sequence of EnsembleNodeData instances.
       */
-    def build(tree: IsolationTree, treeID: Int): Seq[EnsembleNodeData] = {
+    def build(
+        tree: ExtendedIsolationTree,
+        treeID: Int
+    ): Seq[EnsembleNodeData] = {
       val nodeData = NodeData.build(tree.node)
       nodeData.map(nodeData => EnsembleNodeData(treeID, nodeData))
     }

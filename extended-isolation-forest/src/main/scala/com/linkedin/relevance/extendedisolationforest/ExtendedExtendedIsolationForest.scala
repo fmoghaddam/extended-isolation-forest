@@ -1,6 +1,9 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
-import com.linkedin.relevance.isolationforest.Utils.{DataPoint, OutlierScore}
+import com.linkedin.relevance.extendedisolationforest.Utils.{
+  DataPoint,
+  OutlierScore
+}
 import org.apache.spark.internal.Logging
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 import org.apache.spark.ml.linalg.Vector
@@ -19,17 +22,17 @@ import org.apache.spark.{HashPartitioner, TaskContext}
   *
   * @param uid The immutable unique ID for the model.
   */
-class IsolationForest(override val uid: String)
-    extends Estimator[IsolationForestModel]
-    with IsolationForestParams
+class ExtendedExtendedIsolationForest(override val uid: String)
+    extends Estimator[ExtendedExtendedIsolationForestModel]
+    with ExtendedIsolationForestParams
     with DefaultParamsWritable
     with Logging {
 
   def this() = this(Identifiable.randomUID("isolation-forest"))
 
-  override def copy(extra: ParamMap): IsolationForest = {
+  override def copy(extra: ParamMap): ExtendedExtendedIsolationForest = {
 
-    copyValues(new IsolationForest(uid), extra)
+    copyValues(new ExtendedExtendedIsolationForest(uid), extra)
   }
 
   /** Fits an isolation forest given an input DataFrame.
@@ -38,7 +41,7 @@ class IsolationForest(override val uid: String)
     *             each data instance.
     * @return The trained isolation forest model.
     */
-  override def fit(data: Dataset[_]): IsolationForestModel = {
+  override def fit(data: Dataset[_]): ExtendedExtendedIsolationForestModel = {
 
     import data.sparkSession.implicits._
 
@@ -138,9 +141,9 @@ class IsolationForest(override val uid: String)
     // before slice to ensure no bias when we limit to numSamples. A unique random seed is used to
     // build each tree.
     implicit val isolationTreeEncoder =
-      org.apache.spark.sql.Encoders.kryo[IsolationTree]
+      org.apache.spark.sql.Encoders.kryo[ExtendedIsolationTree]
     val isolationTrees
-        : Array[IsolationTree] = repartitionedFlattenedSampledDataset
+        : Array[ExtendedIsolationTree] = repartitionedFlattenedSampledDataset
       .mapPartitions(x => {
         // Use a different seed for each partition to ensure each partition has an independent set of
         // random numbers. This ensures each tree is truly trained independently and doing so has a
@@ -170,7 +173,7 @@ class IsolationForest(override val uid: String)
         // random numbers. This ensures each tree is truly trained independently and doing so has a
         // measurable effect on the results.
         Iterator(
-          IsolationTree
+          ExtendedIsolationTree
             .fit(
               dataForTree,
               $(randomSeed) + $(numEstimators) + TaskContext.get
@@ -182,7 +185,8 @@ class IsolationForest(override val uid: String)
       .collect()
 
     val isolationForestModel = copyValues(
-      new IsolationForestModel(uid, isolationTrees, numSamples).setParent(this)
+      new ExtendedExtendedIsolationForestModel(uid, isolationTrees, numSamples)
+        .setParent(this)
     )
 
     // Determine and set the model threshold based upon the specified contamination and
@@ -278,12 +282,14 @@ class IsolationForest(override val uid: String)
 
 /** Companion object to the IsolationForest class.
   */
-case object IsolationForest extends DefaultParamsReadable[IsolationForest] {
+case object ExtendedExtendedIsolationForest
+    extends DefaultParamsReadable[ExtendedExtendedIsolationForest] {
 
   /** Loads a saved IsolationForest Estimator ML instance.
     *
     * @param path Path to the saved IsolationForest Estimator ML instance directory.
     * @return The saved IsolationForest Estimator ML instance.
     */
-  override def load(path: String): IsolationForest = super.load(path)
+  override def load(path: String): ExtendedExtendedIsolationForest =
+    super.load(path)
 }

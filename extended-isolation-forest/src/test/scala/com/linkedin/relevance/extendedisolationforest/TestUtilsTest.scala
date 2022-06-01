@@ -1,4 +1,4 @@
-package com.linkedin.relevance.isolationforest
+package com.linkedin.relevance.extendedisolationforest
 
 import TestUtils._
 import org.testng.Assert
