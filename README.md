@@ -57,7 +57,7 @@ To force a rebuild of the library, you can use:
 ./gradlew clean build --no-build-cache
 ```
 
-### Add an isolation-forest dependency to your project
+<!-- ### Add an isolation-forest dependency to your project
 
 Please check [Maven Central](https://repo.maven.apache.org/maven2/com/linkedin/isolation-forest/) for the latest
 artifact versions.
@@ -129,7 +129,7 @@ Here are some examples for multiple recent Spark/Scala version combinations.
   <artifactId>isolation-forest_3.0.0_2.12</artifactId>
   <version>2.0.4</version>
 </dependency>
-```
+``` -->
 
 ### Model parameters
 
@@ -148,7 +148,7 @@ Here are some examples for multiple recent Spark/Scala version combinations.
 
 ### Training and scoring
 
-Here is an example demonstrating how to import the library, create a new `IsolationForest`
+Here is an example demonstrating how to import the library, create a new `ExtendedIsolationForest`
 instance, set the model hyperparameters, train the model, and then score the training data. `data`
 is a Spark DataFrame with a column named `features` that contains a
 `org.apache.spark.ml.linalg.Vector` of the attributes to use for training. In this example, the
@@ -156,7 +156,7 @@ DataFrame `data` also has a `labels` column; it is not used in the training proc
 be useful for model evaluation.
 
 ```scala
-import com.linkedin.relevance.isolationforest._
+import com.linkedin.relevance.extendedisolationforest._
 import org.apache.spark.ml.feature.VectorAssembler
 
 /**
@@ -191,7 +191,7 @@ val data = assembler
   */
 
 val contamination = 0.1
-val isolationForest = new IsolationForest()
+val extendedIsolationForest = new ExtendedIsolationForest()
   .setNumEstimators(100)
   .setBootstrap(false)
   .setMaxSamples(256)
@@ -203,13 +203,13 @@ val isolationForest = new IsolationForest()
   .setContaminationError(0.01 * contamination)
   .setRandomSeed(1)
 
-val isolationForestModel = isolationForest.fit(data)
+val extendedIsolationForestModel = extendedIsolationForest.fit(data)
  
 /**
   * Score the training data
   */
 
-val dataWithScores = isolationForestModel.transform(data)
+val dataWithScores = extendedIsolationForestModel.transform(data)
 
 // scala> dataWithScores.printSchema
 // root
@@ -225,27 +225,27 @@ are named `predictedLabel` and `outlierScore`.
 
 ### Saving and loading a trained model
 
-Once you've trained an `isolationForestModel` instance as per the instructions above, you can use the
+Once you've trained an `extendedIsolationForestModel` instance as per the instructions above, you can use the
 following commands to save the model to HDFS and reload it as needed.
 
 ```scala
-val path = "/user/testuser/isolationForestWriteTest"
+val path = "/user/testuser/extendedIsolationForestWriteTest"
 
 /**
   * Persist the trained model on disk
   */
 
 // You can ensure you don't overwrite an existing model by removing .overwrite from this command
-isolationForestModel.write.overwrite.save(path)
+extendedIsolationForestModel.write.overwrite.save(path)
 
 /**
   * Load the saved model from disk
   */
 
-val isolationForestModel2 = IsolationForestModel.load(path)
+val extendedIsolationForestModel2 = ExtendedIsolationForestModel.load(path)
 ```
 
-## Validation
+<!-- ## Validation
 
 The original 2008 "Isolation forest" paper by Liu et al. published the AUROC results obtained by
 applying the algorithm to 12 benchmark outlier detection datasets. We applied our implementation of
@@ -270,9 +270,9 @@ result. The quoted uncertainty is the one-sigma error on the mean.
 
 Our implementation provides AUROC values that are in very good agreement the results in the original
 Liu et al. publication. There are a few very small discrepancies that are likely due the limited
-precision of the AUROC values reported in Liu et al.
+precision of the AUROC values reported in Liu et al. -->
 
-## Contributions
+<!-- ## Contributions
 
 If you would like to contribute to this project, please review the instructions [here](CONTRIBUTING.md).
 
@@ -280,4 +280,4 @@ If you would like to contribute to this project, please review the instructions 
 
 * F. T. Liu, K. M. Ting, and Z.-H. Zhou, “Isolation forest,” in 2008 Eighth IEEE International Conference on Data Mining, 2008, pp. 413–422.
 * F. T. Liu, K. M. Ting, and Z.-H. Zhou, “Isolation-based anomaly detection,” ACM Transactions on Knowledge Discovery from Data (TKDD), vol. 6, no. 1, p. 3, 2012.
-* Shebuti Rayana (2016).  ODDS Library [http://odds.cs.stonybrook.edu]. Stony Brook, NY: Stony Brook University, Department of Computer Science.
+* Shebuti Rayana (2016).  ODDS Library [http://odds.cs.stonybrook.edu]. Stony Brook, NY: Stony Brook University, Department of Computer Science. -->
